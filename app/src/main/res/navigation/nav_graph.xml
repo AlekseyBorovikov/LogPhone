@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/process_item">
+
+
+    <fragment
+        android:id="@+id/process_item"
+        android:name="com.example.loginningphone_12.ui.fragments.ProcessFragment"
+        android:label="process"
+        tools:layout="@layout/process_fragment" />
+
+    <fragment
+        android:id="@+id/notification_item"
+        android:name="com.example.loginningphone_12.ui.fragments.NotificationFragment"
+        android:label="notification"
+        tools:layout="@layout/notification_fragment" />
+
+</navigation>
