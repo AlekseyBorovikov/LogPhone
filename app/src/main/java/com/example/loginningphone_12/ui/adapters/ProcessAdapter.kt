@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import com.example.loginningphone_12.databinding.ProcessItemBinding
 import com.example.loginningphone_12.models.App
+import com.example.loginningphone_12.util.FormatStrings
 
 
 class ProcessAdapter(): RecyclerView.Adapter<ProcessAdapter.ProcessViewHolder>() {
@@ -43,10 +44,10 @@ class ProcessAdapter(): RecyclerView.Adapter<ProcessAdapter.ProcessViewHolder>()
     override fun onBindViewHolder(holder: ProcessAdapter.ProcessViewHolder, position: Int) {
         val app = differ.currentList[position]
         holder.nameProcess.text = app.appName
-        holder.duration.text = app.usageDuration
-        holder.icon.setImageDrawable(app.appIcon)
-        holder.progressBar.progress = app.usagePercentage
-        holder.percent.text = "${app.usagePercentage} %"
+        holder.duration.text = FormatStrings.getDurationBreakdown(app.usageDuration)
+        holder.icon.setImageBitmap(app.appIcon)
+//        holder.progressBar.progress = app.usagePercentage
+//        holder.percent.text = "${app.usagePercentage} %"
     }
 
     inner class ProcessViewHolder(itemBinding: ProcessItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {

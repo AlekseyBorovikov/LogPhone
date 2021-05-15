@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,16 +12,18 @@ import com.example.loginningphone_12.MainActivity
 import com.example.loginningphone_12.R
 import com.example.loginningphone_12.databinding.ProcessFragmentBinding
 import com.example.loginningphone_12.ui.adapters.ProcessAdapter
-import com.example.loginningphone_12.ui.view_models.AppsViewModel
+import com.example.loginningphone_12.ui.view_models.LogViewModel
 import java.util.*
 import androidx.lifecycle.Observer
+import com.example.loginningphone_12.util.FormatStrings
+import java.util.concurrent.TimeUnit
 
 
 class ProcessFragment: Fragment(R.layout.process_fragment) {
     private var _binding: ProcessFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var processesRecyclerView: RecyclerView
-    private lateinit var viewModel: AppsViewModel
+    private lateinit var viewModel: LogViewModel
     lateinit var appsAdapter: ProcessAdapter
 
     override fun onCreateView(
@@ -43,8 +46,13 @@ class ProcessFragment: Fragment(R.layout.process_fragment) {
 
             val cal: Calendar = GregorianCalendar.getInstance()
             cal.timeInMillis = appList.time
-//            "Данные от: ${dateFormat.format(TimeUnit.MILLISECONDS.toMillis(appList.time))}"
+            binding.processDateStart.text = "Данные от: ${FormatStrings.formatDate(TimeUnit.MILLISECONDS.toMillis(appList.time))}"
         })
+
+        binding.fab.setOnClickListener {
+            viewModel.getAppsToday()
+            Toast.makeText(activity, "Обновлено.", Toast.LENGTH_LONG).show()
+        }
     }
 
     fun setupRecyclerView() {

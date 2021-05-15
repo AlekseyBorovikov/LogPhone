@@ -8,6 +8,9 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Process
@@ -47,7 +50,7 @@ class UStats {
     }
 
     private fun createAppsList(context: Context, stats: List<UsageStats>): List<App> {
-        var appsList: ArrayList<App> = ArrayList()
+        val appsList: ArrayList<App> = ArrayList()
         if (stats.size > 0) {
             val mySortedMap: MutableMap<String, UsageStats> = TreeMap()
             for (usageStats in stats) {
@@ -73,33 +76,26 @@ class UStats {
         //fill the appsList
         for (usageStats in usageStatsList) {
             try {
+                usageStats.firstTimeStamp
                 val packageName = usageStats.packageName
                 var icon: Drawable? = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground)
                 val packageNames = packageName.split("\\.".toRegex()).toTypedArray()
                 var appName = packageNames[packageNames.size - 1].trim { it <= ' ' }
                 if (isAppInfoAvailable(usageStats, context)) {
-                    val ai: ApplicationInfo? = context?.let {
-                        it.applicationContext.packageManager.getApplicationInfo(
-                                packageName,
-                                0
-                        )
-                    }
-                    icon = context?.let { context ->
-                        ai?.let { ai ->
-                            context.applicationContext.packageManager.getApplicationIcon(
-                                    ai
-                            )
-                        }
-                    }
-                    appName = context?.let { context ->
-                        ai?.let { ai ->
-                            context.applicationContext.packageManager.getApplicationLabel(ai)
-                        }
-                    }.toString()
-                    val usageDuration = getDurationBreakdown(usageStats.totalTimeInForeground)
-                    val usagePercentage = (usageStats.totalTimeInForeground * 100 / totalTime).toInt()
+                    val ai: ApplicationInfo = context.applicationContext.packageManager.getApplicationInfo(
+                            packageName,
+                            0
+                    )
 
-                    icon?.let{ appsList.add(App(icon, appName, usagePercentage, usageDuration)) }
+                    appName = context.applicationContext.packageManager.getApplicationLabel(ai).toString()
+//                    val usagePercentage = (usageStats.totalTimeInForeground * 100 / totalTime).toInt()
+
+                    icon = context.applicationContext.packageManager.getApplicationIcon(ai)
+                    val img = Bitmap.createBitmap(icon.intrinsicWidth, icon.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                    val canvas: Canvas = Canvas(img)
+                    icon.setBounds(0, 0, canvas.width, canvas.height)
+                    icon.draw(canvas)
+                    appsList.add(App(img, appName, usageStats.totalTimeInForeground, usageStats.totalTimeInForeground))
                 }
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
@@ -138,24 +134,6 @@ class UStats {
         } else {
             mode == AppOpsManager.MODE_ALLOWED
         }
-    }
-
-
-    /**
-     * helper method to get string in format hh:mm:ss from miliseconds
-     *
-     * @param millis (application time in foreground)
-     * @return string in format hh:mm:ss from miliseconds
-     */
-    private fun getDurationBreakdown(millis: Long): String {
-        var millis = millis
-        require(millis >= 0) { "Duration must be greater than zero!" }
-        val hours: Long = TimeUnit.MILLISECONDS.toHours(millis)
-        millis -= TimeUnit.HOURS.toMillis(hours)
-        val minutes: Long = TimeUnit.MILLISECONDS.toMinutes(millis)
-        millis -= TimeUnit.MINUTES.toMillis(minutes)
-        val seconds: Long = TimeUnit.MILLISECONDS.toSeconds(millis)
-        return "$hours h $minutes m $seconds s"
     }
 
     private fun getUsageStatsManager(context: Context): UsageStatsManager {

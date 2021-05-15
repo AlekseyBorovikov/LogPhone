@@ -1,10 +1,21 @@
 package com.example.loginningphone_12.models
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.util.Date
 
-class App(appIcon: Drawable, appName: String, usagePercentage: Int, usageDuration: String) {
-    var appIcon: Drawable = appIcon
-    var appName: String = appName
-    var usagePercentage: Int = usagePercentage
-    var usageDuration: String = usageDuration
+@Entity(
+        tableName = "apps"
+)
+class App(
+    val appIcon: Bitmap,
+    val appName: String,
+    var usageDuration: Long,
+    var lastForegroundValue: Long,
+    val created: Date? = null
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int? = null
 }

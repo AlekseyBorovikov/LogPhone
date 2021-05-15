@@ -49,29 +49,7 @@ class NotificationFragment: Fragment(R.layout.notification_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.notificationBut.setOnClickListener {
-            activity?.let { activityContext ->
-                val alarmManager = activityContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val intent2check = Intent(activityContext, ProcessReceiver::class.java)
-                intent2check.setAction(Constants.ACTION_PROCESS_SERVICE)
-                val pendingIntent = PendingIntent
-                    .getService(activityContext, 101, intent2check, PendingIntent.FLAG_NO_CREATE)
-                if (pendingIntent != null) {
-                    //TODO КАК ОСТАНОВИТЬ?!!!
-                    alarmManager.cancel(pendingIntent)
-                    Log.e(TAG, "Cancel alarm")
-                }else{
-                    createRepeatingService()
-                    Log.e(TAG, "Create alarm")
-                }
-            }
-        }
-    }
 
-    private fun createRepeatingService(){
-        activity?.let { context ->
-            val time = SystemClock.elapsedRealtime()
-            Log.e(TAG, "set time: ${FormatStrings.formatDate(time)}")
-            ProcessService(context).setRepetitiveAlarm(time)
         }
     }
 
