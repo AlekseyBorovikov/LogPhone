@@ -1,8 +1,6 @@
 package com.example.loginningphone_12
 
-import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
@@ -21,8 +19,6 @@ import com.example.loginningphone_12.ui.view_models.LogViewModel
 import com.example.loginningphone_12.util.Constants
 import com.example.loginningphone_12.util.FormatStrings
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -44,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent2check = Intent(this, ProcessReceiver::class.java)
         val pendingIntent = PendingIntent
-                .getBroadcast(this, Constants.INTENT_ID, intent2check, PendingIntent.FLAG_NO_CREATE)
+                .getBroadcast(this, Constants.INTENT_PROCESS_ID, intent2check, PendingIntent.FLAG_NO_CREATE)
         if (pendingIntent == null) {
             createRepeatingService()
             Log.e(TAG, "Create alarm")

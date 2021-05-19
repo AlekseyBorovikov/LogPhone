@@ -20,6 +20,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.example.loginningphone_12.R
 import com.example.loginningphone_12.models.App
 import com.example.loginningphone_12.models.AppsList
+import com.example.loginningphone_12.util.FormatImg
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -91,10 +92,7 @@ class UStats {
 //                    val usagePercentage = (usageStats.totalTimeInForeground * 100 / totalTime).toInt()
 
                     icon = context.applicationContext.packageManager.getApplicationIcon(ai)
-                    val img = Bitmap.createBitmap(icon.intrinsicWidth, icon.intrinsicHeight, Bitmap.Config.ARGB_8888)
-                    val canvas: Canvas = Canvas(img)
-                    icon.setBounds(0, 0, canvas.width, canvas.height)
-                    icon.draw(canvas)
+                    val img = FormatImg.drawableToBitmap(icon)
                     appsList.add(App(img, appName, usageStats.totalTimeInForeground, usageStats.totalTimeInForeground))
                 }
             } catch (e: PackageManager.NameNotFoundException) {

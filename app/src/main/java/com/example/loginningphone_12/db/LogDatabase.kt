@@ -6,15 +6,17 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.loginningphone_12.models.App
+import com.example.loginningphone_12.models.Notification
 
 @Database(
-    entities = [App::class],
+    entities = [App::class, Notification::class],
     version = 1
 )
 @TypeConverters(Converters::class)
 abstract class LogDatabase : RoomDatabase() {
 
     abstract fun getLogDao(): AppDao
+    abstract fun getNotificationsDao(): NotificationDao
 
     companion object{
         @Volatile

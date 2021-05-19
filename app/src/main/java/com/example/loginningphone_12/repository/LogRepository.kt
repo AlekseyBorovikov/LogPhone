@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import com.example.loginningphone_12.db.LogDatabase
 import com.example.loginningphone_12.models.App
 import com.example.loginningphone_12.models.AppsList
+import com.example.loginningphone_12.models.Notification
 import com.example.loginningphone_12.tools.UStats
 import java.util.*
 
@@ -21,8 +22,11 @@ class LogRepository(
 
     suspend fun getAllApps() = db.getLogDao().getAll()
 
-    suspend fun getAllByCreated(created: Long) = db.getLogDao().getAllByCreated(created)
+    suspend fun getAllByCreated(created: Long): List<App>? = db.getLogDao().getAllByCreated(created)
 
     suspend fun getAppTodayByName(created: Long, appName: String): App? =
             db.getLogDao().getTodayByName(created, appName)
+
+    fun getAllSavedNotifications(): LiveData<List<Notification>> =
+            db.getNotificationsDao().getAll()
 }

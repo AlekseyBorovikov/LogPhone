@@ -9,7 +9,6 @@ class FormatStrings {
 
     companion object{
 
-        @SuppressLint("SimpleDateFormat")
         fun formatDate(timesInMillis: Long, format: String = "yyyy.MM.dd"): String{
             val dateFormat = SimpleDateFormat(format)
             return dateFormat.format(timesInMillis)

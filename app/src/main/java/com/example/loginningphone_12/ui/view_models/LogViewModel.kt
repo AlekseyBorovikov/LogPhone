@@ -1,16 +1,15 @@
 package com.example.loginningphone_12.ui.view_models
 
 import android.app.Application
+import android.app.Notification
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.loginningphone_12.LogApplication
 import com.example.loginningphone_12.models.App
 import com.example.loginningphone_12.models.AppsList
 import com.example.loginningphone_12.repository.LogRepository
+import com.example.loginningphone_12.util.Constants
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -43,11 +42,15 @@ class LogViewModel(
                 }
                 app.lastForegroundValue = usageApp.lastForegroundValue
                 logRepository.updateApp(app)
-            } ?: logRepository.addApp(App(usageApp.appIcon, usageApp.appName, 0, usageApp.lastForegroundValue))
+            } ?: let{
+                var duration: Long = 0
+                if (usageApp.usageDuration <= Constants.REPEAT_SECONDS) duration = usageApp.usageDuration
+                logRepository.addApp(App(usageApp.appIcon, usageApp.appName, duration, usageApp.lastForegroundValue))
+            }
         }
 
         val list = logRepository.getAllByCreated(today.time.time)
-        list.let{ apps.postValue(AppsList(it, today.time.time)) }
+        list?.let{ apps.postValue(AppsList(it, today.time.time)) }
     }
 
     fun saveApp(app: App) = viewModelScope.launch {
@@ -58,10 +61,25 @@ class LogViewModel(
         apps.postValue(AppsList(logRepository.getAllApps(), 0))
     }
 
+    fun getAppsByDate(date: Date): Boolean {
+        var dataSuccess = false
+        viewModelScope.launch {
+            val list = logRepository.getAllByCreated(date.time)
+            list?.let {
+                if (it.size > 0) {
+                    apps.postValue(AppsList(it, date.time))
+                    dataSuccess = true
+                }
+            }
+        }
+        return dataSuccess
+    }
+
     fun deleteApp(app: App) = viewModelScope.launch {
         logRepository.deleteApp(app)
     }
-//    private fun handleAppsResponse(usageStats: List<UsageStats>): List<App>{
-//
-//    }
+
+    fun getSavedNotifications(): LiveData<List<com.example.loginningphone_12.models.Notification>>{
+        return logRepository.getAllSavedNotifications()
+    }
 }

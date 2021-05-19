@@ -9,7 +9,7 @@ import java.util.Date
 @Entity(
         tableName = "apps"
 )
-class App(
+data class App(
     val appIcon: Bitmap,
     val appName: String,
     var usageDuration: Long,

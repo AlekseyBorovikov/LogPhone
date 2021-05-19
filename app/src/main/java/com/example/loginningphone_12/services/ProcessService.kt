@@ -22,7 +22,7 @@ class ProcessService(private val context: Context) {
             timeInMillis,
             getPendingIntent(
                 Intent(context, ProcessReceiver::class.java).apply {
-                    action = Constants.ACTION_PROCESS_SERVICE
+                    action = Constants.ACTION.APPS_SERVICE
                 }
             )
         )
@@ -33,7 +33,7 @@ class ProcessService(private val context: Context) {
             timeInMillis,
             getPendingIntent(
                 Intent(context, ProcessReceiver::class.java).apply {
-                    action = Constants.ACTION_PROCESS_SERVICE
+                    action = Constants.ACTION.APPS_SERVICE
                 }
             )
         )
@@ -75,7 +75,7 @@ class ProcessService(private val context: Context) {
     private fun getPendingIntent(intent: Intent) =
         PendingIntent.getBroadcast(
                 context,
-                Constants.INTENT_ID,
+                Constants.INTENT_PROCESS_ID,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )

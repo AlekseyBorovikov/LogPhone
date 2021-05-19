@@ -30,7 +30,7 @@ class ProcessReceiver: BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.e(TAG, "is set service")
         GlobalScope.launch(Dispatchers.IO){
-            if(intent?.action == Constants.ACTION_PROCESS_SERVICE) {
+            if(intent?.action == Constants.ACTION.APPS_SERVICE) {
                 context?.let {
                     var adding = 0
                     var updating = 0
@@ -59,7 +59,9 @@ class ProcessReceiver: BroadcastReceiver(){
                             app.lastForegroundValue = usageApp.lastForegroundValue
                             dao.update(app)
                         } ?: let{
-                            dao.add(App(usageApp.appIcon, usageApp.appName, 0, usageApp.lastForegroundValue))
+                            var duration: Long = 0
+                            if (usageApp.usageDuration <= Constants.REPEAT_SECONDS) duration = usageApp.usageDuration
+                            dao.add(App(usageApp.appIcon, usageApp.appName, duration, usageApp.lastForegroundValue))
                             adding++
                         }
                     }

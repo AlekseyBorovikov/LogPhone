@@ -1,5 +1,6 @@
 package com.example.loginningphone_12.ui.fragments
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.example.loginningphone_12.ui.adapters.ProcessAdapter
 import com.example.loginningphone_12.ui.view_models.LogViewModel
 import java.util.*
 import androidx.lifecycle.Observer
+import com.example.loginningphone_12.tools.DatePicker
 import com.example.loginningphone_12.util.FormatStrings
 import java.util.concurrent.TimeUnit
 
@@ -52,6 +54,14 @@ class ProcessFragment: Fragment(R.layout.process_fragment) {
         binding.fab.setOnClickListener {
             viewModel.getAppsToday()
             Toast.makeText(activity, "Обновлено.", Toast.LENGTH_LONG).show()
+        }
+
+        binding.btnPickDate.setOnClickListener {
+            val cal = Calendar.getInstance()
+            DatePickerDialog(
+                    activity as MainActivity, DatePicker(viewModel), cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
     }
 

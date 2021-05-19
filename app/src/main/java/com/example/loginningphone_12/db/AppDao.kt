@@ -22,7 +22,7 @@ interface AppDao
     suspend fun getAll(): List<App>
 
     @Query("SELECT * FROM apps WHERE created=:created and usageDuration > 0")
-    suspend fun getAllByCreated(created: Long): List<App>
+    suspend fun getAllByCreated(created: Long): List<App>?
 
     @Query("SELECT * FROM apps WHERE created=:created and appName=:appName")
     suspend fun getTodayByName(created: Long, appName: String): App?
